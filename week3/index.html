@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <title>Document</title>
+</head>
+
+<body>
+    <table>
+        <tr>
+            <th>Student Name</th>
+            <th>Score</th>
+        </tr>
+        <script>
+            let grades = "jim|25, sue|32, mary|34, ann|22, ted|28, frank|15, lisa|19, mike|30, ahn|26, vishaya|27";
+            grades = grades.split(", "); // change from string to array
+            grades = grades.sort(); // Make it alphabetic
+            total = 0;
+            max = 0; // All scores will be >= 0
+            min = 100; // setting it as 0 will make it automatically a 0 min. All scores will be <= 100
+            for (let i = 0; i < grades.length; i++) {
+                document.write("<tr>");
+                student = grades[i].split("|"); // split item into name and score  
+                name = student[0]; // student name
+                score = student[1]; // student score
+                firstLetter = name.charAt(0);
+                firstLetter = firstLetter.toUpperCase(); // Capitalize the first letter
+                rest = name.substring(1);
+                name = firstLetter + rest; // putting the name back together
+                total += parseInt(score); // calculating the sum
+                document.write("<td>" + name + "</td><td>" + score + "</td>");
+                if (score > max) { // finding the max score
+                    max = score;
+                }
+                if (score < min) { // finding the minimum score
+                    min = score;
+                }
+                document.write("</tr>");
+            }
+            document.write("<tr><td>&nbsp;</td></tr>");
+            document.write("<tr><td><b>Number of Students</b></td><td>" + grades.length + "</td></tr>"); 
+            document.write("<tr><td><b>Minimum Score</b></td><td>" + min + "</td></tr>"); 
+            document.write("<tr><td><b>Maximum Score</b></td><td>" + max + "</td></tr>"); 
+            document.write("<tr><td><b>Average Score</b></td><td>" + total / grades.length + "</td></tr>");  
+        </script>
+    </table>
+</body>
+
+</html>
