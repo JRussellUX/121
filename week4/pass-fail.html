@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+</head>
+
+<body>
+
+    <h1>Functions & validation</h1>
+
+    <form id="form1" action="#" onsubmit="return validateForm(this);">
+        first name: <input type="text" name="firstName"><br>
+        last name: <input type="text" name="lastName"><br>
+        password: <input type="text" name="password"><br>
+
+        <button>Check</button>
+    </form>
+
+    <hr>
+    <div id="message"></div>
+
+    <script>
+
+        // add validatePassword function here
+        const validatePassword = (password) => {
+            if (password.length < 8) {
+                return false;
+            }
+            let hasUpperCase = false;
+            let hasLowerCase = false;
+            for (let i = 0; i < password.length; i++) {
+                let thisChar = password.charAt(i);
+                if (thisChar >= "A" && thisChar <= "Z") {
+                    hasUpperCase = true;
+                }
+                if (thisChar >= "a" && thisChar <= "z") {
+                    hasLowerCase = true;
+                }
+            }
+            if (hasUpperCase && hasLowerCase) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        const validateForm = (myForm) => {
+
+            let firstName = myForm.firstName.value; // get text of firstname field
+            let lastName = myForm.lastName.value; // get text of lastname field
+            let password = myForm.password.value; // get text of password field
+
+            // update 'message' DIV with appropriate wording
+            $("#message").html("Button clicked");
+
+            /* Form validation code goes here */
+            let passwordOk = validatePassword(password);
+            if (passwordOk == false) {
+                $("#message").html("Invalid Password");
+                return false;
+            }
+            if (firstName == "") {
+                $("#message").html("First Name Missing");
+                return false;
+            }
+            if (lastName == "") {
+                $("#message").html("Last Name Missing");
+                return false;
+            }
+            $("#message").html("All is Okay");
+
+            return false; // prevent page reload
+        }
+
+    </script>
+
+</body>
+
+</html>
