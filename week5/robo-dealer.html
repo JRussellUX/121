@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+</head>
+
+<body>
+
+  <h1>Robo Dealer</h1>
+
+  <button onclick="dealHand();">Deal Hand</button>
+
+  <button onclick="shuffle();">Shuffle Deck</button>
+
+  <hr>
+  <div id="card_hand"></div>
+
+  <script>
+
+    var cards = [];
+
+    /* define Card object and deck of cards here */
+    function Card(value, suit) {
+      this.value = value;
+      this.suit = suit;
+    }
+    function chooseHand(cards) { // adding cards to the parameters so it can get it from dealHand()
+      let hand = []; // defining hand array
+      for (let i = 0; i < 5; i++) {
+        cardIndex = Math.floor(Math.random() * cards.length); // Chooses a value from 0 to array length - 1
+        thisCard = cards[cardIndex];// Taking the random card from the array
+        cards.splice(cardIndex, 1); // removing the chosen card from the srray so it can not be used again until deck is shuffled
+        hand.push(thisCard); // takes the random card and put it into the hand
+      }
+      return hand; // returning the hand to caller
+    }
+
+    function faceCards(value) { // setting face cards to certian values
+      switch (value) {
+        case 11:
+          return "Jack";
+        case 12:
+          return "Queen";
+        case 13:
+          return "King";
+        case 14:
+          return "Ace";
+        default:
+          return value;
+      }
+    }
+
+    const suits = ["Hearts", "Diamonds", "Clubs", "Spades"];
+
+    const shuffle = () => {
+      cards = []; // defining car array
+      /* code to deal a card hand goes here */
+      for (let suit = 0; suit < 4; suit++) {
+        for (let value = 2; value <= 14; value++) {
+          cards.push(new Card(value, suits[suit])) // creates a new card and puts it in the card array
+        }
+      }
+      $("#card_hand").html("The deck is good to go, Deal hand");
+    }
+
+    const dealHand = () => {
+      if (cards.length < 5) { // if there is not more than 5 cards you can't continue to play until you shuffle
+        $("#card_hand").html("Not enough cards, shuffle the deck");
+        return false; // so the program doesn't continue to pull cards
+      }
+      let result = chooseHand(cards); // calling the chooseHand function and giving it the deck of cards
+      console.log(result);
+
+      string = "<ul>"; // begin unordered list
+      for (let i = 0; i < 5; i++) {
+        card = result[i];
+        string += "<li>Card " + (i + 1) + ": " + faceCards(card.value) + " of " + card.suit + "</li>";
+      }
+      string += "</ul>"; // end unordered list
+      // update 'card_hand' DIV with appropriate information
+      $("#card_hand").html(string);
+
+      return false; // prevent page reload
+    }
+    shuffle();
+
+  </script>
+
+</body>
+
+</html>
