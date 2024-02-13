@@ -1,0 +1,145 @@
+<html>
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+<style>
+
+    body {
+        margin-left: 200px;
+        margin-top: 50px;
+    }
+    
+    .bGryffindor {
+        background-color: #740001;
+        color: #d3a625;
+        border-style: none;
+        border-radius: 3px;
+        margin: 5px;
+    }
+
+    .bHufflepuff {
+        background-color: #ecb939;
+        color: #372e29;
+        border-style: none;
+        border-radius: 3px;
+        margin: 5px;
+    }
+
+    .bRavenclaw {
+        background-color: #0e1a40;
+        color: #946b2d;
+        border-style: none;
+        border-radius: 3px;
+        margin: 5px;
+    }
+
+    .bSlytherin {
+        background-color: #1a472a;
+        color: #aaaaaa;
+        border-style: none;
+        border-radius: 3px;
+        margin: 5px;
+    }
+
+    .r {
+        background-color: black;
+        color: cornsilk;
+        border-style: none;
+        border-radius: 3px;
+        margin: 5px;
+    }
+</style>
+
+<body>
+    <div id="buttons"></div>
+    <table border='1'>
+        <tr class="title">
+            <th>name</th>
+            <th>role</th>
+            <th>house</th>
+            <th>gender</th>
+            <th>alignment</th>
+        </tr>
+    </table>
+    <button class="r">Reset</button>
+</body>
+
+<script>
+    // list of characters
+    let characters = [
+        { name: "Albus Dumbledore", role: "staff", house: "Gryffindor", gender: "m", alignment: "good" },
+        { name: "Nymphadora Tonks", role: "", house: "Hufflepuff", gender: "f", alignment: "good" },
+        { name: "Ron Weasley", role: "student", house: "Gryffindor", gender: "m", alignment: "good" },
+        { name: "Ginny Weasley", role: "student", house: "Gryffindor", gender: "f", alignment: "good" },
+        { name: "Hermione Granger", role: "student", house: "Gryffindor", gender: "f", alignment: "good" },
+        { name: "Mad-eye Moody", role: "staff", house: "", gender: "m", alignment: "good" },
+        { name: "Prof McGonagall", role: "staff", house: "Gryffindor", gender: "f", alignment: "good" },
+        { name: "Harry Potter", role: "student", house: "Gryffindor", gender: "m", alignment: "good" },
+        { name: "Draco Malfoy", role: "student", house: "Slytherin", gender: "m", alignment: "evil" },
+        { name: "Hagrid", role: "staff", house: "Gryffindor", gender: "m", alignment: "good" },
+        { name: "Luna Lovegood", role: "student", house: "Ravenclaw", gender: "f", alignment: "good" },
+        { name: "Voldemort", role: "", house: "Slytherin", gender: "m", alignment: "evil" },
+        { name: "Bellatrix Lestrange", role: "", house: "Slytherin", gender: "f", alignment: "evil" },
+        { name: "Severus Snape", role: "staff", house: "Slytherin", gender: "m", alignment: "?" }
+    ];
+
+    $(document).ready(function () {
+
+        /*
+        - add a button for each 'house' value
+        - add table row for each character
+        - set visible rows to alternating background color
+            
+        - add click handler to show only rows matching selected 'house'. Enable buttons to call this handler. 
+        
+        - add click handler to reset table 
+        */
+
+
+        // Add table rows for each character information
+        let table = $("tbody");
+
+        let houses = [];
+        for (index in characters) { // index in our characters array
+            let char = characters[index]; // taking each index and putting into char
+            let row = "<tr class=\"" + char.house + "\">" + // creating table rows with house as the class
+                "<td>" + char.name + "</td>" +
+                "<td>" + char.role + "</td>" +
+                "<td>" + char.house + "</td>" +
+                "<td>" + char.gender + "</td>" +
+                "<td>" + char.alignment + "</td></tr>";
+            table.append(row);   // append is adding the row into the table body
+
+            if (char.house != "" && !houses.includes(char.house)) {
+                houses.push(char.house);
+                // create button
+                $("#buttons").append("<button class=\"b" + char.house + "\">" + char.house + "</button>");
+            }
+        }
+        setRowColors();
+        
+        // Add a button handler for each house value
+        const buttons = $("button");
+        buttons.on("click", (e) => {
+            let house = e.target.innerText;
+            if (house == "reset") { // setting so that when the button reset is clicked it shows all rows
+                $("tr").show();
+            } else {  // setting so that otherwise when a button displaying the house will show the rows with an equal house value
+                $("tr." + house).show();
+                $("tr").not("." + house).not(".title").hide();
+            }
+            setRowColors();
+        });
+
+    });
+
+    function setRowColors() { // set colors for odd and even rows
+        $("tr:visible:odd").css({ "color": "red" });
+        $("tr:visible:even").not(".title").css({ "color": "blue" });
+    }
+
+</script>
+
+</html>
