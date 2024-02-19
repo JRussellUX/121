@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Forcast</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<style>
+    table {
+        width: 50%;
+        padding: auto;
+        border-collapse: collapse;
+    }
+
+    table,
+    th,
+    td {
+        border: 1px solid;
+        text-align: center;
+    }
+
+    form {
+        width: 50%;
+        padding: auto;
+    }
+
+    input[type=text] {
+        width: 50%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        box-sizing: border-box;
+    }
+</style>
+
+<body>
+    <script>
+        function submit() {
+            $("#result").hide();
+            let city = $('#city_input').val();
+            if (city == '') { // checking that the city is not an empty string
+                $("#error").text("Please enter a City.");
+                return;
+            }
+            if (parseInt(city) == city) { // Checking to make sure the city is not numeric
+                $("#error").text("Please enter a City not as a number.");
+                return;
+            }
+
+            $("#error").text("Getting latitude and longitude"); // displaying a message so the user knows what is going on
+            let apiKey = "6ebdef37c8230e97262c5c4788a68d0f"; // api key as a variable as not to have to write it all the time
+            // call http
+            fetch("http://api.openweathermap.org/geo/1.0/direct?q=" + city + ",US&appid=" + apiKey) // fetching lat and long of inputted city
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if (data.length == 0) {
+                        $("#error").text("City not found");
+                        return;
+                    }
+                    // Analyizing response
+                    let firstResponse = data[0];
+                    let city = firstResponse.name;
+                    let lat = firstResponse.lat;
+                    let lon = firstResponse.lon;
+                    let country = firstResponse.country;
+                    let state = firstResponse.state;
+                    $("#city").text(city + ", " + state + ", " + country); // display actual city, state, country returned
+                    $("#error").text("Getting weather"); // displaying a message so the user knows what is going on
+                    // gets the weather for the lat and long
+                    fetch("http://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&units=imperial&appid=" + apiKey)
+                        .then((response) => response.json())
+                        .then((data) => {
+                            console.log(data);
+                            $("#error").text("");
+                            $("#result").show();
+                            // Delete the table children
+                            $("#forecast tr").slice(1).remove(); // removing the privioulsy searched city from the table.
+                            // Analyizes all the lines of data in the response
+                            for (index in data.list) {
+                                firstResponse = data.list[index * 8]; // gives 3 hour intervals, so 3 * 8 = 24 hours, to give one entry a day
+                                let minTemp = firstResponse.main.temp_min;
+                                let maxTemp = firstResponse.main.temp_max;
+                                let humidity = firstResponse.main.humidity;
+                                let description = firstResponse.weather[0].description;
+                                let unix_timestamp = firstResponse.dt;
+                                let date = new Date(unix_timestamp * 1000);
+                                let weatherIcon = firstResponse.weather[0].icon;
+                                // Table rows displaying the information
+                                let row = "<tr>" +
+                                    "<td>" + date.toString().substring(0, 15) + "</td>" +
+                                    "<td>" + Math.round(minTemp) + "</td>" +
+                                    "<td>" + Math.round(maxTemp) + "</td>" +
+                                    "<td>" + humidity + "%</td>" +
+                                    "<td>" + description + "<br><img src=\"http://openweathermap.org/img/w/" + weatherIcon + ".png\"></td>" +
+                                    "</tr>";
+                                // Add a new table child
+                                $('#forecast tr:last').after(row);
+                            }
+                        });
+                });
+
+
+        }
+    </script>
+
+    <div id="result" hidden>
+        <h2 id="city"></h2>
+        <table id="forecast">
+            <tr>
+                <th>Date</th>
+                <th>Low</th>
+                <th>High</th>
+                <th>Humidity</th>
+                <th>Description</th>
+            </tr>
+        </table>
+    </div>
+
+    <form id="weather">
+
+        <label for="city_input">City:</label>
+        <input type="text" id="city_input">
+    </form>
+    <button type="button" onclick="submit()">Search</button>
+    <p id="error"></p>
+
+</body>
+
+</html>
