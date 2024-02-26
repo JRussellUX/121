@@ -1,0 +1,12 @@
+{
+  "name": "jennifer",
+  "version": "1.0.0",
+  "description": "homework for week 10",
+  "homepage": "https://github.com/JRussellUX/it121",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jennifer Russell",
+  "license": "MIT"
+}
