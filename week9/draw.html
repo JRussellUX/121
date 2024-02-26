@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas id="draw" height=480 width=640></canvas>
+    <script>
+        function drawCircle(context, color) {
+            // Circle measurements
+            let circleDiameter = 150;
+            let distance = 150;
+            let radius = circleDiameter / 2;
+            let circleTop = 0;
+            if (drop > distance * 2) { // if the circle reached the top, then it starts over at 0
+                drop = 0;
+            }
+            if (drop > distance) { // if the circle reaches the recatangle it makes its way back up
+                circleTop = rectTop - radius + (distance - drop);
+            } else { // circle is going down
+                circleTop = rectTop - (distance + radius) + drop;
+            }
+            let circleLeft = rectLeft + rectWidth / 2;
+            context.save();
+            if (drop == distance) {
+                context.scale(2, 1); // scaling the circle at every bounce
+                circleLeft -= circleDiameter; // keeps the margin the same
+            }
+
+            // Draw circle
+            context.beginPath();
+            context.arc(circleLeft, circleTop, radius, 0, 2 * Math.PI);
+            context.fillStyle = color; // fills the circle
+            context.fill();
+            context.strokeStyle = "white"; // to hide the outline
+            context.stroke();
+            context.restore();
+        }
+
+        function bounce() {
+            let canvas = document.getElementById('draw');
+            let context = canvas.getContext('2d');
+            drawCircle(context, "white");
+            drop += 10;
+            drawCircle(context, "lightblue");
+        }
+        let canvas = document.getElementById('draw');
+        let context = canvas.getContext('2d');
+        // General measurments
+        let height = 480;
+        let width = 640;
+        // Line measurement
+        let belowLine = 70;
+        let lineWidth = 500;
+        let lineTop = height - belowLine;
+        let lineMargin = 70;
+        let lineLeft = lineMargin;
+        // Rectangle measurements
+        let rectMargin = 100;
+        let rectHeight = 100;
+        var rectWidth = 300;
+        var rectTop = lineTop - rectHeight;
+        var rectLeft = lineMargin + rectMargin;
+
+        // Draw line  
+        context.beginPath();
+        context.moveTo(lineLeft, lineTop);
+        context.lineTo(lineLeft + lineWidth, lineTop);
+        context.strokeStyle = "purple";
+        context.stroke();
+        // Draw Rectangle
+        context.fillStyle = "pink";
+        context.fillRect(rectLeft, rectTop, rectWidth, rectHeight);
+        // Draw Circle
+        var drop = 0;
+        drawCircle(context, "lightblue");
+
+        // Interval
+        setInterval(bounce, 100);
+
+    </script>
+</body>
+
+</html>
